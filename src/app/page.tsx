@@ -4,25 +4,71 @@ import { useState } from "react";
 
 const Home = () => {
   const [inputText, setInputText] = useState<string>("");
+  const [isDragOverInFileArea, setIsDragOverInFileArea] =
+    useState<boolean>(false);
+  const [dataUrl, setDataUrl] = useState<string>("");
 
+  // 공통 파일 읽기 로직
+  const readFile = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = String(reader.result);
+      setDataUrl(dataUrl);
+    };
+    reader.readAsDataURL(file); // Base64 인코딩 방식
+  };
+
+  // 파일 업로드
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        console.log("reader.result");
-        console.log(reader.result);
-      };
-      reader.readAsDataURL(file);
+      readFile(file);
+    }
+  };
+
+  // 기존 event를 막아야 onDrop 핸들러가 동작가능
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+  };
+
+  const handleDragEnter = () => {
+    setIsDragOverInFileArea(true);
+  };
+
+  const handleDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
+    if (
+      event.relatedTarget &&
+      !event.currentTarget.contains(event.relatedTarget as Node)
+    ) {
+      setIsDragOverInFileArea(false);
+    }
+  };
+
+  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    const file = event.dataTransfer.files[0];
+    if (file) {
+      readFile(file);
+      setIsDragOverInFileArea(false);
     }
   };
 
   return (
     <div className="flex flex-col w-screen h-[2000px] max-w-[800px] mx-auto pt-[60px] relative">
-      <header className="sticky top-0 bg-white border-2">
-        <div className="relative">
+      <div
+        className={`sticky top-0 bg-white border-2 w-full mx-auto bg-gray-200 border-2 border-dashed flex flex-col items-center justify-center transition-all ${
+          isDragOverInFileArea ? "bg-blue-200 border-blue-500" : ""
+        }`}
+        onDragOver={handleDragOver}
+        onDragEnter={handleDragEnter}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+      >
+        <div className="relative w-full">
           <textarea
-            className="w-full resize-none pr-[48px] border-b-2 border-black"
+            className={`w-full resize-none pr-[48px] focus:outline-none focus:border-transparent ${
+              isDragOverInFileArea && "pointer-events-none" // textarea가 div drag 이벤트와 충돌하는 것 때문에 drag 중에는 막기
+            }`}
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
           ></textarea>
@@ -35,7 +81,7 @@ const Home = () => {
             <button className="">검색</button>
           </div>
         </div>
-        <div className="flex gap-[10px] items-center">
+        <div className="flex gap-[10px] w-full">
           <input
             type="file"
             id="file-upload"
@@ -47,7 +93,25 @@ const Home = () => {
           </label>
           <button>음성</button>
         </div>
-      </header>
+        {dataUrl && (
+          <div className="relative">
+            <img
+              src={dataUrl}
+              alt="upload image"
+              className="w-full h-auto object-contain rounded-[20px]"
+            />
+            <div
+              className="absolute top-0 right-0 cursor-pointer"
+              onClick={() => {
+                setDataUrl("");
+              }}
+            >
+              닫기
+            </div>
+          </div>
+        )}
+      </div>
+
       <main className="flex flex-grow bg-green-50 flex-col justify-between">
         {Array.from({ length: 10 }, (_, i) => i + 1).map((item, index) => (
           <div key={index}>{item}</div>
