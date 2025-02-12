@@ -56,8 +56,10 @@ const Home = () => {
   return (
     <div className="flex flex-col w-screen h-[2000px] max-w-[800px] mx-auto pt-[60px] relative">
       <div
-        className={`sticky top-0 bg-white border-2 w-full mx-auto bg-gray-200 border-2 border-dashed flex flex-col items-center justify-center transition-all ${
-          isDragOverInFileArea ? "bg-blue-200 border-blue-500" : ""
+        className={`sticky top-0 bg-white border-2 w-full mx-auto bg-gray-200 border-2 flex flex-col items-center justify-center transition-all ${
+          isDragOverInFileArea
+            ? "bg-blue-200 border-blue-500 border-dashed"
+            : ""
         }`}
         onDragOver={handleDragOver}
         onDragEnter={handleDragEnter}
@@ -101,7 +103,7 @@ const Home = () => {
               className="w-full h-auto object-contain rounded-[20px]"
             />
             <div
-              className="absolute top-0 right-0 cursor-pointer"
+              className="absolute top-0 right-0 cursor-pointer bg-green-200"
               onClick={() => {
                 setDataUrl("");
               }}
