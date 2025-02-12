@@ -4,16 +4,27 @@ import { useState } from "react";
 
 const Home = () => {
   const [inputText, setInputText] = useState<string>("");
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        console.log("reader.result");
+        console.log(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="flex flex-col w-screen h-[2000px] max-w-[800px] mx-auto pt-[60px] relative">
-      <header className="relative sticky top-0 bg-white border-2">
-        <div>
+      <header className="sticky top-0 bg-white border-2">
+        <div className="relative">
           <textarea
             className="w-full resize-none pr-[48px] border-b-2 border-black"
             value={inputText}
-            onChange={(e) => {
-              setInputText(e.target.value);
-            }}
+            onChange={(e) => setInputText(e.target.value)}
           ></textarea>
           <div className="absolute right-0 top-1/2 transform -translate-y-1/2 flex items-center gap-[10px]">
             {inputText && (
@@ -25,7 +36,15 @@ const Home = () => {
           </div>
         </div>
         <div className="flex gap-[10px] items-center">
-          <button>파일</button>
+          <input
+            type="file"
+            id="file-upload"
+            onChange={handleFileChange}
+            className="hidden"
+          />
+          <label htmlFor="file-upload" className="cursor-pointer">
+            파일
+          </label>
           <button>음성</button>
         </div>
       </header>
