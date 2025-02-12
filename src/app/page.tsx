@@ -10,6 +10,12 @@ const Home = () => {
 
   // 공통 파일 읽기 로직
   const readFile = (file: File) => {
+    // MIME 타입이 이미지인 파일만 읽기
+    if (!file.type.startsWith("image/")) {
+      alert("이미지 파일만 업로드할 수 있습니다.");
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = () => {
       const dataUrl = String(reader.result);
