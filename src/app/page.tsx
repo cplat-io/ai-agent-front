@@ -1,5 +1,6 @@
 "use client";
 
+import SpeechToText from "@/components/SpeechToText";
 import { useState } from "react";
 
 const Home = () => {
@@ -74,7 +75,7 @@ const Home = () => {
       >
         <div className="relative w-full">
           <textarea
-            className={`w-full resize-none pr-[48px] focus:outline-none focus:border-transparent ${
+            className={`w-full resize-none pr-[48px] focus:outline-none focus:border-transparent bg-red-100 h-[70px] ${
               isDragOverInFileArea && "pointer-events-none" // textarea가 div drag 이벤트와 충돌하는 것 때문에 drag 중에는 막기
             }`}
             value={inputText}
@@ -99,7 +100,8 @@ const Home = () => {
           <label htmlFor="file-upload" className="cursor-pointer">
             파일
           </label>
-          <button>음성</button>
+          <div>|</div>
+          <SpeechToText setInputText={setInputText} />
         </div>
         {dataUrl && (
           <div className="relative">
