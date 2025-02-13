@@ -1,6 +1,7 @@
 "use client";
 
-import SpeechToText from "@/components/SpeechToText";
+import ServerSentEvent from "@/containers/ServerSentEvent";
+import SpeechToText from "@/containers/SpeechToText";
 import { useState } from "react";
 
 const Home = () => {
@@ -123,9 +124,10 @@ const Home = () => {
       </div>
 
       <main className="flex flex-grow bg-green-50 flex-col justify-between">
-        {Array.from({ length: 10 }, (_, i) => i + 1).map((item, index) => (
+        {/* {Array.from({ length: 10 }, (_, i) => i + 1).map((item, index) => (
           <div key={index}>{item}</div>
-        ))}
+        ))} */}
+        <ServerSentEvent />
       </main>
       <footer className="bg-blue-50 sticky bottom-0 border-2 h-[50px]">
         footer
